@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator</title>
+    <link rel="icon" type="img/x-icon" href="img/qr.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>QR Code Generator</h1>
+      <select id="qr-type" onchange="updateInputFields()">
+        <option value="text">Text</option>
+        <option value="url">URL</option>
+        <option value="wifi">WI-FI</option>
+      </select>
+      <div id="input-fields">
+        <input
+          type="text"
+          id="text-input"
+          placeholder="Enter text to generate QR code"
+        />
+      </div>
+      <div class="select">
+        <label for="icon-select">Choose an icon to overlay:</label>
+        <select id="icon-select">
+          <option value="">None</option>
+          <option value="fa-facebook">Facebook</option>
+          <option value="fa-brands fa-twitter">Twitter</option>
+          <option value="fa-instagram">Instagram</option>
+          <option value="fa-linkedin">LinkedIn</option>
+          <option value="fa-solid fa-wifi">WI-FI</option>
+        </select>
+      </div>
+      <button onclick="generateQRCode()">Generate QR Code</button>
+      <div id="qrcode"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
