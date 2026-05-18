@@ -1,0 +1,9 @@
+/* ============================================================
+   main.css  |  CSS entry point
+   Import order is significant: variables must load first so
+   every downstream file can reference the custom properties.
+   ============================================================ */
+
+@import './variables.css';
+@import './layout.css';
+@import './components.css';

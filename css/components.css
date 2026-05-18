@@ -1,0 +1,368 @@
+/* ============================================================
+   components.css  |  UI component styles
+   Covers: form, color picker, tooltip, buttons, QR preview,
+           keyframe animations, reduced-motion override.
+   ============================================================ */
+
+
+/* ── Form ────────────────────────────────────────────────────── */
+
+.qr-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.form-group__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--clr-text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  user-select: none;
+  cursor: default;
+}
+
+.form-group__required {
+  color: var(--clr-error);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+}
+
+/* Shared base for text inputs and selects */
+.form-group__input,
+.form-group__select {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--r-md);
+  background: var(--clr-surface);
+  color: var(--clr-text-primary);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 2.75rem; /* 44px touch target (WCAG 2.5.5) */
+  transition: border-color var(--ease-base), box-shadow var(--ease-base);
+}
+
+.form-group__input::placeholder {
+  color: var(--clr-text-muted);
+}
+
+.form-group__input:hover,
+.form-group__select:hover {
+  border-color: var(--clr-border-hover);
+}
+
+.form-group__input:focus,
+.form-group__select:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px var(--clr-primary-ring);
+}
+
+/* Invalid state — toggled by UIHandler via JS */
+.form-group__input--invalid {
+  border-color: var(--clr-error);
+  background-color: var(--clr-error-bg);
+}
+.form-group__input--invalid:focus {
+  border-color: var(--clr-error);
+  box-shadow: 0 0 0 3px var(--clr-error-ring);
+}
+
+/* Custom dropdown arrow injected as an inline SVG data URI */
+.form-group__select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2394a3b8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--sp-3) center;
+  background-size: 1.2rem;
+  padding-right: var(--sp-10);
+  cursor: pointer;
+}
+
+.form-group__error {
+  font-size: var(--fs-sm);
+  color: var(--clr-error);
+  line-height: 1.4;
+}
+
+
+/* ── Color Picker ────────────────────────────────────────────── */
+
+/*
+  The wrapper is a <label> so clicking anywhere on it (including
+  the swatch and hex text) opens the OS color dialog. The native
+  <input type="color"> is overlaid transparently to receive events.
+*/
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--r-md);
+  background: var(--clr-surface);
+  cursor: pointer;
+  position: relative;
+  min-height: 2.75rem;
+  user-select: none;
+  transition: border-color var(--ease-base), box-shadow var(--ease-base);
+}
+
+.color-picker:hover {
+  border-color: var(--clr-border-hover);
+}
+
+/* Focus ring shown when the hidden input inside receives keyboard focus */
+.color-picker:focus-within {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px var(--clr-primary-ring);
+}
+
+.color-picker__swatch {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--clr-border);
+  flex-shrink: 0;
+  transition: background-color var(--ease-base);
+}
+
+.color-picker__hex {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+  color: var(--clr-text-secondary);
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+/* Transparent, full-size overlay — receives pointer events to open the color dialog */
+.color-picker__native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+
+/* ── Tooltip ─────────────────────────────────────────────────── */
+
+.tooltip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-text-muted);
+  cursor: help;
+  border-radius: var(--r-full);
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: calc(100% + var(--sp-2));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 18rem;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--clr-text-primary);
+  color: var(--clr-surface);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-normal);
+  line-height: 1.55;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--ease-base);
+  z-index: 10;
+}
+
+.tooltip:hover::after,
+.tooltip:focus-visible::after {
+  opacity: 1;
+}
+
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-6);
+  min-height: 2.75rem;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+  border-radius: var(--r-md);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    background-color var(--ease-base),
+    border-color     var(--ease-base),
+    color            var(--ease-base),
+    box-shadow       var(--ease-base),
+    opacity          var(--ease-base);
+}
+
+.btn--full { width: 100%; }
+
+.btn:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary — filled indigo */
+.btn--primary {
+  background: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary);
+}
+.btn--primary:hover {
+  background: var(--clr-primary-hover);
+  border-color: var(--clr-primary-hover);
+  box-shadow: 0 4px 14px var(--clr-primary-shadow);
+}
+.btn--primary:active {
+  background: var(--clr-primary-hover);
+  box-shadow: none;
+}
+
+/* Secondary — ghost / outlined */
+.btn--secondary {
+  background: var(--clr-bg-subtle);
+  color: var(--clr-text-primary);
+  border-color: var(--clr-border);
+}
+.btn--secondary:hover {
+  background: var(--clr-border);
+  border-color: var(--clr-border-hover);
+}
+
+.btn__icon {
+  flex-shrink: 0;
+}
+
+/* Spinner — hidden by default, revealed when .btn--loading is applied */
+.btn__spinner {
+  display: none;
+  flex-shrink: 0;
+  animation: spin 0.65s linear infinite;
+}
+.btn--loading .btn__spinner {
+  display: inline-block;
+}
+
+
+/* ── QR Preview ──────────────────────────────────────────────── */
+
+.qr-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 17rem;
+  border-radius: var(--r-xl);
+  border: 1.5px dashed var(--clr-border);
+  background-color: var(--clr-bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.qr-preview__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-8);
+  text-align: center;
+  color: var(--clr-text-muted);
+}
+
+.qr-preview__icon {
+  width: 5.5rem;
+  height: 5.5rem;
+  opacity: 0.35;
+}
+
+.qr-preview__placeholder-text {
+  font-size: var(--fs-sm);
+  color: var(--clr-text-muted);
+}
+
+.qr-preview__output {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6);
+  width: 100%;
+  animation: fadeIn var(--ease-slow) both;
+}
+
+/* Scale canvas/img down visually while keeping download at full resolution */
+.qr-preview__output canvas,
+.qr-preview__output img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.qr-actions {
+  width: 100%;
+  padding-top: var(--sp-4);
+}
+
+@media (min-width: 720px) {
+  .qr-actions { padding-top: 0; }
+}
+
+
+/* ── Keyframe Animations ─────────────────────────────────────── */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+/* ── Reduced Motion ──────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

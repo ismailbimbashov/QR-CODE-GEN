@@ -1,0 +1,201 @@
+/* ============================================================
+   layout.css  |  Reset, base styles, and page-level layout
+   Covers: reset, global base, utilities, header, hero,
+           app-card two-panel grid, footer.
+   ============================================================ */
+
+
+/* ── Reset & Base ────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure the HTML hidden attribute always wins over author display rules */
+[hidden] { display: none !important; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-normal);
+  line-height: 1.5;
+  color: var(--clr-text-primary);
+  background-color: var(--clr-bg);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--clr-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--ease-base);
+}
+a:hover { color: var(--clr-primary-hover); }
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Global keyboard-only focus ring */
+:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+}
+
+
+/* ── Utilities ───────────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1020px;
+  margin-inline: auto;
+  padding-inline: var(--sp-4);
+}
+
+
+/* ── Site Header ─────────────────────────────────────────────── */
+
+.site-header {
+  background: var(--clr-surface);
+  border-bottom: 1px solid var(--clr-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+}
+
+.site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  text-decoration: none;
+  color: var(--clr-text-primary);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  letter-spacing: -0.01em;
+}
+.site-header__brand:hover { color: var(--clr-primary); }
+
+.site-header__logo {
+  color: var(--clr-primary);
+  flex-shrink: 0;
+}
+
+
+/* ── Main & Hero ─────────────────────────────────────────────── */
+
+.main {
+  flex: 1;
+  padding-block: var(--sp-12) var(--sp-16);
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: var(--sp-10);
+}
+
+.hero__title {
+  font-size: clamp(var(--fs-2xl), 5vw, var(--fs-4xl));
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--clr-text-primary);
+  margin-bottom: var(--sp-3);
+}
+
+.hero__subtitle {
+  font-size: var(--fs-lg);
+  color: var(--clr-text-secondary);
+  max-width: 50ch;
+  margin-inline: auto;
+}
+
+
+/* ── App Card (two-panel layout) ─────────────────────────────── */
+
+.app-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-xl);
+  display: grid;
+  grid-template-columns: 1fr;   /* mobile: stacked */
+  overflow: hidden;
+}
+
+@media (min-width: 720px) {
+  .app-card {
+    grid-template-columns: 1fr 1fr; /* desktop: side-by-side */
+  }
+}
+
+.app-card__panel {
+  padding: var(--sp-8);
+}
+
+.app-card__panel--form {
+  border-bottom: 1px solid var(--clr-border);
+}
+
+@media (min-width: 720px) {
+  .app-card__panel--form {
+    border-bottom: none;
+    border-right: 1px solid var(--clr-border);
+  }
+
+  .app-card__panel--preview {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: var(--sp-6);
+  }
+}
+
+
+/* ── Site Footer ─────────────────────────────────────────────── */
+
+.site-footer {
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  padding-block: var(--sp-6);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--clr-text-muted);
+  margin-top: auto;
+}

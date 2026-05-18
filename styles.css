@@ -1,72 +1,635 @@
+/* ============================================================
+   styles.css  |  QRGen — QR Code Generator
+   Design: Clean, minimal SaaS aesthetic
+   Naming: BEM (Block__Element--Modifier)
+   ============================================================ */
+
+
+/* ── 1. Design Tokens (CSS Custom Properties) ───────────────── */
+:root {
+  /* Brand palette */
+  --clr-primary:         #4f46e5;
+  --clr-primary-hover:   #4338ca;
+  --clr-primary-shadow:  rgba(79, 70, 229, 0.28);
+  --clr-primary-ring:    rgba(79, 70, 229, 0.18);
+
+  /* Neutral surfaces */
+  --clr-bg:              #f8fafc;
+  --clr-bg-subtle:       #f1f5f9;
+  --clr-surface:         #ffffff;
+  --clr-border:          #e2e8f0;
+  --clr-border-hover:    #cbd5e1;
+
+  /* Text */
+  --clr-text-primary:    #0f172a;
+  --clr-text-secondary:  #475569;
+  --clr-text-muted:      #94a3b8;
+
+  /* Feedback */
+  --clr-error:           #ef4444;
+  --clr-error-bg:        #fef2f2;
+  --clr-error-ring:      rgba(239, 68, 68, 0.18);
+
+  /* Typography */
+  --ff-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+
+  --fs-xs:   0.75rem;    /* 12px */
+  --fs-sm:   0.875rem;   /* 14px */
+  --fs-base: 1rem;       /* 16px */
+  --fs-lg:   1.125rem;   /* 18px */
+  --fs-xl:   1.25rem;    /* 20px */
+  --fs-2xl:  1.5rem;     /* 24px */
+  --fs-3xl:  1.875rem;   /* 30px */
+  --fs-4xl:  2.25rem;    /* 36px */
+
+  --fw-normal:   400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* Spacing (8-point grid) */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.25rem;
+  --sp-6:  1.5rem;
+  --sp-8:  2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+
+  /* Border radii */
+  --r-sm:   0.25rem;
+  --r-md:   0.5rem;
+  --r-lg:   0.75rem;
+  --r-xl:   1rem;
+  --r-2xl:  1.5rem;
+  --r-full: 9999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 3px 0 rgba(0,0,0,.07), 0 1px 2px -1px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.07), 0 4px 6px -4px rgba(0,0,0,.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,.07), 0 8px 10px -6px rgba(0,0,0,.04);
+
+  /* Motion */
+  --ease-base: 200ms ease;
+  --ease-slow: 320ms ease;
+}
+
+
+/* ── 2. Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure [hidden] is always hidden regardless of author display rules */
+[hidden] { display: none !important; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
+  font-family: var(--ff-sans);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-normal);
+  line-height: 1.5;
+  color: var(--clr-text-primary);
+  background-color: var(--clr-bg);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--clr-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--ease-base);
+}
+a:hover { color: var(--clr-primary-hover); }
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Global focus ring — only for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+}
+
+
+/* ── 3. Utilities ────────────────────────────────────────────── */
+
+/* Screen-reader only — visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 .container {
-    text-align: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 1020px;
+  margin-inline: auto;
+  padding-inline: var(--sp-4);
 }
 
-input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+
+/* ── 4. Site Header ──────────────────────────────────────────── */
+.site-header {
+  background: var(--clr-surface);
+  border-bottom: 1px solid var(--clr-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 20px 0 30px 0;
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
 }
 
-button:hover {
-    background-color: #0056b3;
+.site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  text-decoration: none;
+  color: var(--clr-text-primary);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  letter-spacing: -0.01em;
+}
+.site-header__brand:hover { color: var(--clr-primary); }
+
+.site-header__logo {
+  color: var(--clr-primary);
+  flex-shrink: 0;
 }
 
-#qrcode {
-    margin-top: 20px;
-    display: block ruby;
+
+/* ── 5. Main & Hero ──────────────────────────────────────────── */
+.main {
+  flex: 1;
+  padding-block: var(--sp-12) var(--sp-16);
 }
 
-.select{
-    margin-top: 20px;
-}
-.fa-facebook {
-    color: #002c65;
-    background: #ffffff;
-    border-radius: 100px;
+.hero {
+  text-align: center;
+  margin-bottom: var(--sp-10);
 }
 
-.fa-instagram{
-    color: rgb(225, 23, 198);
-    background: #ffffff;
-    border-radius: 5px;
+.hero__title {
+  font-size: clamp(var(--fs-2xl), 5vw, var(--fs-4xl));
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--clr-text-primary);
+  margin-bottom: var(--sp-3);
 }
 
-.fa-solid{
-    color: #4c8de3;
+.hero__subtitle {
+  font-size: var(--fs-lg);
+  color: var(--clr-text-secondary);
+  max-width: 50ch;
+  margin-inline: auto;
 }
 
-.fa-brands{
-    color: #1da1f2;
+
+/* ── 6. App Card (two-panel layout) ─────────────────────────── */
+.app-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-xl);
+  display: grid;
+  grid-template-columns: 1fr;       /* mobile: stacked */
+  overflow: hidden;
 }
-.fa-linkedin{
-   color: #0077B5;
-   background: #ffffff;
-   border-radius: 5px;
+
+@media (min-width: 720px) {
+  .app-card {
+    grid-template-columns: 1fr 1fr; /* desktop: side-by-side */
+  }
+}
+
+.app-card__panel {
+  padding: var(--sp-8);
+}
+
+/* Divider between panels */
+.app-card__panel--form {
+  border-bottom: 1px solid var(--clr-border);
+}
+
+@media (min-width: 720px) {
+  .app-card__panel--form {
+    border-bottom: none;
+    border-right: 1px solid var(--clr-border);
+  }
+
+  .app-card__panel--preview {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: var(--sp-6);
+  }
+}
+
+
+/* ── 7. Form ─────────────────────────────────────────────────── */
+.qr-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.form-group__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--clr-text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  user-select: none;
+  cursor: default;
+}
+
+.form-group__required {
+  color: var(--clr-error);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+}
+
+/* Shared input + select base styles */
+.form-group__input,
+.form-group__select {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--r-md);
+  background: var(--clr-surface);
+  color: var(--clr-text-primary);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color var(--ease-base), box-shadow var(--ease-base);
+  min-height: 2.75rem; /* 44px touch target */
+}
+
+.form-group__input::placeholder {
+  color: var(--clr-text-muted);
+}
+
+.form-group__input:hover,
+.form-group__select:hover {
+  border-color: var(--clr-border-hover);
+}
+
+.form-group__input:focus,
+.form-group__select:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px var(--clr-primary-ring);
+}
+
+/* Invalid state — applied via JS */
+.form-group__input--invalid {
+  border-color: var(--clr-error);
+  background-color: var(--clr-error-bg);
+}
+.form-group__input--invalid:focus {
+  border-color: var(--clr-error);
+  box-shadow: 0 0 0 3px var(--clr-error-ring);
+}
+
+/* Custom dropdown arrow via inline SVG data URI */
+.form-group__select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2394a3b8'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--sp-3) center;
+  background-size: 1.2rem;
+  padding-right: var(--sp-10);
+  cursor: pointer;
+}
+
+.form-group__error {
+  font-size: var(--fs-sm);
+  color: var(--clr-error);
+  line-height: 1.4;
+}
+
+
+/* ── 8. Custom Color Picker ──────────────────────────────────── */
+
+/*
+  The color picker is a <label> wrapping a visually-hidden native
+  <input type="color">. The label's visible content (swatch + hex text)
+  is cosmetic; clicking anywhere on the wrapper activates the real input.
+*/
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--r-md);
+  background: var(--clr-surface);
+  cursor: pointer;
+  position: relative;
+  min-height: 2.75rem; /* 44px touch target */
+  user-select: none;
+  transition: border-color var(--ease-base), box-shadow var(--ease-base);
+}
+
+.color-picker:hover {
+  border-color: var(--clr-border-hover);
+}
+
+/* Focus ring applied when the hidden input inside is focused */
+.color-picker:focus-within {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px var(--clr-primary-ring);
+}
+
+.color-picker__swatch {
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--clr-border);
+  flex-shrink: 0;
+  transition: background-color var(--ease-base);
+}
+
+.color-picker__hex {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+  color: var(--clr-text-secondary);
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+/* Transparent overlay — receives pointer events to open the OS color dialog */
+.color-picker__native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+
+/* ── 9. Tooltip ──────────────────────────────────────────────── */
+.tooltip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-text-muted);
+  cursor: help;
+  border-radius: var(--r-full);
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: calc(100% + var(--sp-2));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 18rem;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--clr-text-primary);
+  color: var(--clr-surface);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-normal);
+  line-height: 1.55;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--ease-base);
+  z-index: 10;
+}
+
+.tooltip:hover::after,
+.tooltip:focus-visible::after {
+  opacity: 1;
+}
+
+
+/* ── 10. Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-6);
+  min-height: 2.75rem; /* 44px touch target */
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+  border-radius: var(--r-md);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    background-color var(--ease-base),
+    border-color var(--ease-base),
+    color var(--ease-base),
+    box-shadow var(--ease-base),
+    opacity var(--ease-base);
+}
+
+.btn--full { width: 100%; }
+
+.btn:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary (filled indigo) */
+.btn--primary {
+  background: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary);
+}
+.btn--primary:hover {
+  background: var(--clr-primary-hover);
+  border-color: var(--clr-primary-hover);
+  box-shadow: 0 4px 14px var(--clr-primary-shadow);
+}
+.btn--primary:active {
+  background: var(--clr-primary-hover);
+  box-shadow: none;
+}
+
+/* Secondary (ghost/outlined) */
+.btn--secondary {
+  background: var(--clr-bg-subtle);
+  color: var(--clr-text-primary);
+  border-color: var(--clr-border);
+}
+.btn--secondary:hover {
+  background: var(--clr-border);
+  border-color: var(--clr-border-hover);
+}
+
+/* Icon that sits beside button label text */
+.btn__icon {
+  flex-shrink: 0;
+}
+
+/* Spinner — hidden by default, shown during loading state */
+.btn__spinner {
+  display: none;
+  flex-shrink: 0;
+  animation: spin 0.65s linear infinite;
+}
+
+.btn--loading .btn__spinner {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ── 11. QR Preview Panel ────────────────────────────────────── */
+.qr-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 17rem;
+  border-radius: var(--r-xl);
+  border: 1.5px dashed var(--clr-border);
+  background-color: var(--clr-bg);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Placeholder (empty state) */
+.qr-preview__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-8);
+  text-align: center;
+  color: var(--clr-text-muted);
+}
+
+.qr-preview__icon {
+  width: 5.5rem;
+  height: 5.5rem;
+  opacity: 0.35;
+}
+
+.qr-preview__placeholder-text {
+  font-size: var(--fs-sm);
+  color: var(--clr-text-muted);
+}
+
+/* Output container — shown after generation */
+.qr-preview__output {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6);
+  width: 100%;
+  animation: fadeIn var(--ease-slow) both;
+}
+
+/* Scale canvas/img down gracefully on narrow screens while keeping download at full res */
+.qr-preview__output canvas,
+.qr-preview__output img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+}
+
+/* Download button wrapper */
+.qr-actions {
+  width: 100%;
+  padding-top: var(--sp-4);
+}
+
+@media (min-width: 720px) {
+  .qr-actions { padding-top: 0; }
+}
+
+
+/* ── 12. Site Footer ─────────────────────────────────────────── */
+.site-footer {
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  padding-block: var(--sp-6);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--clr-text-muted);
+  margin-top: auto;
+}
+
+
+/* ── 13. Animations ──────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Honour the user's motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
